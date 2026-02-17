@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Smart Bookmark App
 
-## Getting Started
+A simple bookmark manager built with Next.js and Supabase.
 
-First, run the development server:
+## Live Demo
+https://smart-bookmark-app-flame-ten.vercel.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Stack
+- Next.js (App Router)
+- Supabase (Auth, Database, Realtime)
+- Tailwind CSS
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+- Google OAuth login
+- Add bookmarks (title + URL)
+- Delete bookmarks
+- Private bookmarks per user using Supabase RLS
+- Real-time style updates across tabs
+- Deployed on Vercel
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Problems Faced & Solutions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Bookmark insert not working
+**Problem:** Insert operations were blocked.  
+**Cause:** Row Level Security (RLS) not configured.  
+**Solution:** Added select, insert, and delete policies using `auth.uid()`.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 2. UI not updating after adding bookmark
+**Problem:** Bookmark appeared only after refresh.  
+**Cause:** UI was not re-fetching data after insert.  
+**Solution:** Added a refresh trigger from the form to the list.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Realtime not working on localhost
+**Problem:** WebSocket connection failed during local testing.  
+**Solution:** Implemented Supabase realtime and added a polling fallback to ensure updates across tabs.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Google login redirecting to localhost in production
+**Problem:** After login, users were redirected to localhost.  
+**Cause:** Supabase Site URL was set to localhost.  
+**Solution:** Updated Site URL to the Vercel domain.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
